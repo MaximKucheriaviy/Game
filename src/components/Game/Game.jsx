@@ -3,9 +3,15 @@ import { Sprite } from "../Sprite/Sprite";
 import { useEffect, useRef, useState } from "react";
 import backGround from "../../images/background.jpg"
 import { generateTarget } from "../../service/generateTargets";
+import { options } from "../../service/options";
+import { Missile } from "../Missile/Missile";
 
 const tick = new Event("tick")
 const tergetGeneration = new Event("tergetGeneration")
+const weponWidth = 20;
+const weponHeight = 20;
+const weponXPosition = options.viewportWidth / 2 - weponWidth / 2;
+const weponYPosition = 30;
 
 export const Game = () => {
     const isStarted = useRef(false);
@@ -13,6 +19,8 @@ export const Game = () => {
     const [yPos] = useState(0);
     const [xPos, setXPos] = useState(-1500);
     const [targets, setTargets] = useState([]);
+    const [missileFired, setMissileFired] = useState(false);
+    const [missileStartPosition, setMissileStartPosition] = useState(0);
 
     const keyDown =  e =>{
         if(e.repeat){
@@ -25,6 +33,12 @@ export const Game = () => {
             console.log(e);
             setSpriteMoveSpeed(10);
         }
+        else if(e.key === " " && !missileFired){
+            e.preventDefault();
+            setMissileStartPosition(xPos)
+            setMissileFired(true);
+        }
+        
     };
     const keyUp =  e =>{
         console.log("released");
@@ -69,12 +83,12 @@ export const Game = () => {
         }, 32);
         setInterval(() => {
             document.dispatchEvent(tergetGeneration);
-        }, 5000);
+        }, 1000);
     },[])
     
-    return <GameStyled width={300} height={600}>
-        <Sprite width={3000} height={600} x={xPos} y={yPos} backgroundImage={backGround}/>
-        <Sprite width={20} height={20} x={300 / 2 - 20 / 2} y={30}/>;
+    return <GameStyled width={options.viewportWidth} height={options.viewportHeight}>
+        <Sprite width={options.gameFieldWidth} height={options.viewportHeight} x={xPos} y={yPos} backgroundImage={backGround}/>
+        <Sprite width={weponWidth} height={weponHeight} x={weponXPosition} y={weponYPosition}/>;
         {targets.map(item => <Sprite 
                                 width={item.width} 
                                 height={item.height} 
@@ -82,5 +96,14 @@ export const Game = () => {
                                 y={yPos + item.yPos}
                                 color="blue"
                             />)}
+        {missileFired && <Missile
+                            x={weponXPosition}
+                            y={weponYPosition}
+                            xPos={xPos}
+                            startPos={missileStartPosition}
+                            remove={() => {setMissileFired(false)}}
+                            targets={targets}
+                            setTargets={setTargets}
+                        />}
     </GameStyled>
 }
