@@ -27,7 +27,7 @@ export const Sprite = ({width, height, x, y, moveSpeed}) => {
                 if(delay === 0){
                     return prev;
                 }
-                return prev + (Math.ceil(moveSpeed * delay / suspenser));
+                return prev + (Math.round(moveSpeed * delay / suspenser));
             });
         }, 10);
     }, [moveSpeed])
