@@ -1,5 +1,6 @@
 import styled from "styled-components"
-import { useEffect, useState, useRef } from "react"
+// import { useEffect, useState, useRef } from "react"
+import backGround from "../../images/background.jpg"
 
 const SpriteStyled = styled.div`
     position: absolute;
@@ -7,33 +8,16 @@ const SpriteStyled = styled.div`
     height: ${props => props.height}px;
     top: 0px;
     left: 0px;
-
+    background-image: url(${backGround});
+    background-size: cover;
+    background-repeat: no-repeat;
     background-color: red;
+
 `
 
-export const Sprite = ({width, height, x, y, moveSpeed}) => {
-    const [widthState] = useState(width);
-    const [heightState] = useState(height);
-    const [xState, setX] = useState(x);
-    const [yState] = useState(y);
-    const prevUpdate = useRef(Date.now());
-    const suspenser = 10;
-
-    useEffect(() => {
-        setInterval(() => {
-            const delay = Date.now() - prevUpdate.current;
-            prevUpdate.current = Date.now();
-            setX(prev => {
-                if(delay === 0){
-                    return prev;
-                }
-                return prev + (Math.round(moveSpeed * delay / suspenser));
-            });
-        }, 10);
-    }, [moveSpeed])
-    
-    
-    return <SpriteStyled style={{transform: `translate(${xState}px, ${yState}px)`}} width={widthState} height={heightState} x={xState} y={yState}>
+export const Sprite = ({width, height, x, y, backgroundImage}) => {
+        
+    return <SpriteStyled style={{transform: `translate(${x}px, ${y}px)`}} width={width} height={height} backgroundImage = "./background.jpg">
 
     </SpriteStyled>
 } 

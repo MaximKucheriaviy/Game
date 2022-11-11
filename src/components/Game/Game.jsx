@@ -7,38 +7,61 @@ const tick = new Event("tick")
 
 export const Game = () => {
     const isStarted = useRef(false);
-    const [spriteMoveSpeed,setSpriteMoveSpeed] = useState(0);
+    const [spriteMoveSpeed, setSpriteMoveSpeed] = useState(0);
+    const [yPos] = useState(0);
+    const [xPos, setXPos] = useState(10);
     const keyDown =  e =>{
-        console.log(e.key);
+        if(e.repeat){
+            return;
+        }
         if(e.key === "a"){
-            setSpriteMoveSpeed(-2)
+            setSpriteMoveSpeed(-5);
         }
         else if(e.key === "d"){
-            setSpriteMoveSpeed(2)
+            console.log(e);
+            setSpriteMoveSpeed(5);
         }
     };
     const keyUp =  e =>{
-        if(e.key === "a"){
-            setSpriteMoveSpeed(0)
-        }
-        else if(e.key === "d"){
-            setSpriteMoveSpeed(0)
-        }
+        console.log("released");
+        setSpriteMoveSpeed(0)
     };
+
     useEffect(() => {
-        if(isStarted.current){
-            return;
-        }
         isStarted.current = true;
+        const tickHendler = () => {
+            setXPos(prev => {
+                const result = prev + spriteMoveSpeed;
+                if(result >= 0){
+                    return 0;
+                }
+                if(Math.abs(result - 300) > 3000){
+                    return -2700;
+                }
+                return result;
+            });
+        }
+        document.addEventListener('keydown', keyDown);
+        document.addEventListener('keyup', keyUp);
+        document.addEventListener('tick', tickHendler);
+        isStarted.current = true;
+
+        return () => {
+            document.removeEventListener('tick',tickHendler)
+            document.removeEventListener('keydown', keyDown);
+            document.removeEventListener('keyup', keyUp);
+        }
+
+    }, [spriteMoveSpeed])
+
+    useEffect(() => {
+        isStarted.current = false;
         setInterval(() => {
             document.dispatchEvent(tick);
-        }, 1000);
-        document.addEventListener("keypress", keyDown);
-        document.addEventListener("keyup", keyUp);
-    }, []);
-
+        }, 32);
+    },[])
     
     return <GameStyled width={300} height={600}>
-        <Sprite width={50} height={30} x={10} y={40} moveSpeed={spriteMoveSpeed}/>
+        <Sprite width={3000} height={600} x={xPos} y={yPos} moveSpeed={spriteMoveSpeed}/>
     </GameStyled>
 }

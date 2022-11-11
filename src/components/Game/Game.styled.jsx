@@ -6,4 +6,5 @@ export const GameStyled = styled.div`
     width: ${props => props.width}px;
     height: ${props => props.height}px;
     border: 2px solid black;
+    overflow: hidden;
 `
