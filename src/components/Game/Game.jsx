@@ -74,6 +74,13 @@ export const Game = () => {
     
     return <GameStyled width={300} height={600}>
         <Sprite width={3000} height={600} x={xPos} y={yPos} backgroundImage={backGround}/>
-        {targets.map(item => <Sprite width={item.width} height={item.height} x={xPos + item.xPos} y={yPos + item.yPos}/>)}
+        <Sprite width={20} height={20} x={300 / 2 - 20 / 2} y={30}/>;
+        {targets.map(item => <Sprite 
+                                width={item.width} 
+                                height={item.height} 
+                                x={xPos + item.xPos} 
+                                y={yPos + item.yPos}
+                                color="blue"
+                            />)}
     </GameStyled>
 }

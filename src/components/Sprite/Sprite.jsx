@@ -11,13 +11,13 @@ const SpriteStyled = styled.div`
     background-image: url(${props => props.backgroundImage});
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: red;
+    background-color: ${props => props.color || "red"};
 
 `
 
-export const Sprite = ({width, height, x, y, backgroundImage}) => {
+export const Sprite = ({width, height, x, y, backgroundImage, color}) => {
         
-    return <SpriteStyled style={{transform: `translate(${x}px, ${y}px)`}} width={width} height={height} backgroundImage = {backgroundImage}>
+    return <SpriteStyled style={{transform: `translate(${x}px, ${y}px)`}} width={width} height={height} backgroundImage = {backgroundImage} color={color}>
 
     </SpriteStyled>
 } 
