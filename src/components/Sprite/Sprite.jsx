@@ -1,6 +1,6 @@
 import styled from "styled-components"
 // import { useEffect, useState, useRef } from "react"
-import backGround from "../../images/background.jpg"
+
 
 const SpriteStyled = styled.div`
     position: absolute;
@@ -8,7 +8,7 @@ const SpriteStyled = styled.div`
     height: ${props => props.height}px;
     top: 0px;
     left: 0px;
-    background-image: url(${backGround});
+    background-image: url(${props => props.backgroundImage});
     background-size: cover;
     background-repeat: no-repeat;
     background-color: red;
@@ -17,7 +17,7 @@ const SpriteStyled = styled.div`
 
 export const Sprite = ({width, height, x, y, backgroundImage}) => {
         
-    return <SpriteStyled style={{transform: `translate(${x}px, ${y}px)`}} width={width} height={height} backgroundImage = "./background.jpg">
+    return <SpriteStyled style={{transform: `translate(${x}px, ${y}px)`}} width={width} height={height} backgroundImage = {backgroundImage}>
 
     </SpriteStyled>
 } 

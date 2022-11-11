@@ -1,25 +1,29 @@
 import { GameStyled } from "./Game.styled";
 import { Sprite } from "../Sprite/Sprite";
 import { useEffect, useRef, useState } from "react";
-
+import backGround from "../../images/background.jpg"
+import { generateTarget } from "../../service/generateTargets";
 
 const tick = new Event("tick")
+const tergetGeneration = new Event("tergetGeneration")
 
 export const Game = () => {
     const isStarted = useRef(false);
     const [spriteMoveSpeed, setSpriteMoveSpeed] = useState(0);
     const [yPos] = useState(0);
-    const [xPos, setXPos] = useState(10);
+    const [xPos, setXPos] = useState(-1500);
+    const [targets, setTargets] = useState([]);
+
     const keyDown =  e =>{
         if(e.repeat){
             return;
         }
         if(e.key === "a"){
-            setSpriteMoveSpeed(-5);
+            setSpriteMoveSpeed(-10);
         }
         else if(e.key === "d"){
             console.log(e);
-            setSpriteMoveSpeed(5);
+            setSpriteMoveSpeed(10);
         }
     };
     const keyUp =  e =>{
@@ -28,40 +32,48 @@ export const Game = () => {
     };
 
     useEffect(() => {
-        isStarted.current = true;
         const tickHendler = () => {
             setXPos(prev => {
                 const result = prev + spriteMoveSpeed;
                 if(result >= 0){
                     return 0;
                 }
-                if(Math.abs(result - 300) > 3000){
+                if(Math.abs(result) + 300 > 3000){
                     return -2700;
                 }
                 return result;
             });
         }
+        const targetGenerationHendler = () => {
+            if(targets.length > 5){
+                return;
+            }
+            setTargets(prev => [...prev, generateTarget(50, 50)]);
+        }
         document.addEventListener('keydown', keyDown);
         document.addEventListener('keyup', keyUp);
         document.addEventListener('tick', tickHendler);
-        isStarted.current = true;
-
+        document.addEventListener('tergetGeneration', targetGenerationHendler);
         return () => {
             document.removeEventListener('tick',tickHendler)
             document.removeEventListener('keydown', keyDown);
-            document.removeEventListener('keyup', keyUp);
+            document.removeEventListener('tergetGeneration', targetGenerationHendler);
         }
 
-    }, [spriteMoveSpeed])
+    }, [spriteMoveSpeed, targets.length])
 
     useEffect(() => {
         isStarted.current = false;
         setInterval(() => {
             document.dispatchEvent(tick);
         }, 32);
+        setInterval(() => {
+            document.dispatchEvent(tergetGeneration);
+        }, 5000);
     },[])
     
     return <GameStyled width={300} height={600}>
-        <Sprite width={3000} height={600} x={xPos} y={yPos} moveSpeed={spriteMoveSpeed}/>
+        <Sprite width={3000} height={600} x={xPos} y={yPos} backgroundImage={backGround}/>
+        {targets.map(item => <Sprite width={item.width} height={item.height} x={xPos + item.xPos} y={yPos + item.yPos}/>)}
     </GameStyled>
 }
