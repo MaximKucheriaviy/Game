@@ -1,6 +1,6 @@
 import { GameStyled } from "./Game.styled";
 import { Sprite } from "../Sprite/Sprite";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import backGround from "../../images/background.jpg"
 import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
@@ -22,15 +22,14 @@ export const Game = () => {
     const [missileFired, setMissileFired] = useState(false);
     const [missileStartPosition, setMissileStartPosition] = useState(0);
 
-    const keyDown =  e =>{
+    const keyDown = useCallback(e =>{
         if(e.repeat){
             return;
         }
-        if(e.key === "a"){
+        if(e.key === "d"){
             setSpriteMoveSpeed(-10);
         }
-        else if(e.key === "d"){
-            console.log(e);
+        else if(e.key === "a"){
             setSpriteMoveSpeed(10);
         }
         else if(e.key === " " && !missileFired){
@@ -39,9 +38,8 @@ export const Game = () => {
             setMissileFired(true);
         }
         
-    };
+    }, [missileFired, xPos]);
     const keyUp =  e =>{
-        console.log("released");
         setSpriteMoveSpeed(0)
     };
 
@@ -62,7 +60,7 @@ export const Game = () => {
             if(targets.length > 5){
                 return;
             }
-            setTargets(prev => [...prev, generateTarget(50, 50)]);
+            setTargets(prev => [...prev, generateTarget(50, 50, prev)]);
         }
         document.addEventListener('keydown', keyDown);
         document.addEventListener('keyup', keyUp);
@@ -74,13 +72,13 @@ export const Game = () => {
             document.removeEventListener('tergetGeneration', targetGenerationHendler);
         }
 
-    }, [spriteMoveSpeed, targets.length])
+    }, [spriteMoveSpeed, targets.length, keyDown])
 
     useEffect(() => {
         isStarted.current = false;
         setInterval(() => {
             document.dispatchEvent(tick);
-        }, 32);
+        }, 16);
         setInterval(() => {
             document.dispatchEvent(tergetGeneration);
         }, 1000);
@@ -90,6 +88,7 @@ export const Game = () => {
         <Sprite width={options.gameFieldWidth} height={options.viewportHeight} x={xPos} y={yPos} backgroundImage={backGround}/>
         <Sprite width={weponWidth} height={weponHeight} x={weponXPosition} y={weponYPosition}/>;
         {targets.map(item => <Sprite 
+                                key={item.id}
                                 width={item.width} 
                                 height={item.height} 
                                 x={xPos + item.xPos} 

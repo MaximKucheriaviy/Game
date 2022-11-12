@@ -1,12 +1,31 @@
-export const generateTarget = (width, height) => {
-    const xPos = getRndInteger(100, 2900);
+import { nanoid } from "nanoid";
+import { options } from "./options";
+
+export const generateTarget = (width, height, targets = []) => {
+    const generationLeftOffset = 200;
+    const generetionRightOffset = options.gameFieldWidth - generationLeftOffset;
+    
+    const xPos = getRndInteger(generationLeftOffset, generetionRightOffset);
     const yPos = getRndInteger(300, 500);
-    return {
+    const result = {
+        id: nanoid(),
         xPos, 
         yPos,
         width, 
         height,
     }
+    if(targets.some(item => {
+        item.x = item.xPos;
+        item.y = item.yPos;
+
+        result.x = result.xPos
+        result.y = result.yPos
+        return getIntersection(result, item);
+    })){
+        console.log("recursion");
+        return generateTarget(width, height, targets);
+    }
+    return result;
 }
 
 
