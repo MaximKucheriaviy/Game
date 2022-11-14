@@ -1,4 +1,5 @@
 import { Sprite } from "../Sprite/Sprite"
+import EventEmitter from "react-native-eventemitter";
 import { useEffect, useState, useCallback} from "react";
 import { options } from "../../service/options";
 import { getIntersection } from "../../service/generateTargets";
@@ -38,9 +39,9 @@ export const Missile = ({x, y, remove, xPos, startPos, targets, setTargets}) => 
     }, [remove, setTargets, startPos, targets, x, yPos])
 
     useEffect(() => {
-        document.addEventListener("tick", onTick);
+        EventEmitter.on("tick", onTick);
         return () => {
-            document.removeEventListener("tick", onTick);
+            EventEmitter.removeListener("tick", onTick);
         }
     }, [onTick])
 

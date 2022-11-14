@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { options } from "./options";
 
 export const generateTarget = (width, height, targets = []) => {
@@ -8,7 +7,6 @@ export const generateTarget = (width, height, targets = []) => {
     const xPos = getRndInteger(generationLeftOffset, generetionRightOffset);
     const yPos = getRndInteger(300, 500);
     const result = {
-        id: nanoid(),
         xPos, 
         yPos,
         width, 
