@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import {Text} from "react-native";
+import {Text, useWindowDimensions} from "react-native";
 import EStyleSheet from "react-native-extended-stylesheet";
 import EventEmitter from "react-native-eventemitter";
 
@@ -20,10 +20,7 @@ const style = EStyleSheet.create({
     }
 })
 
-const weponWidth = 20;
-const weponHeight = 20;
-const weponXPosition = options.viewportWidth / 2 - weponWidth / 2;
-const weponYPosition = 30;
+
 
 export const Game = () => {
     const isStarted = useRef(false);
@@ -33,6 +30,13 @@ export const Game = () => {
     const [targets, setTargets] = useState([]);
     const [missileFired, setMissileFired] = useState(false);
     const [missileStartPosition, setMissileStartPosition] = useState(0);
+    const {height, width} = useWindowDimensions();
+    options.viewportWidth = width;
+
+    const weponWidth = 20;
+    const weponHeight = 20;
+    const weponXPosition = options.viewportWidth / 2 - weponWidth / 2;
+    const weponYPosition = 30;
 
     const onLeft = () => {
         setSpriteMoveSpeed(options.rotationSpeed);

@@ -20,7 +20,6 @@ export const generateTarget = (width, height, targets = []) => {
         result.y = result.yPos
         return getIntersection(result, item);
     })){
-        console.log("recursion");
         return generateTarget(width, height, targets);
     }
     return result;
