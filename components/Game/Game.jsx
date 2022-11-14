@@ -13,6 +13,7 @@ import { options } from "../../service/options";
 import { GameStyled, ControlBox, ControlButton } from "./Game.styled";
 
 import backGround from "../../images/background.jpg"
+import targetImage from "../../assets/Vector.png"
 
 const style = EStyleSheet.create({
     button: {
@@ -71,7 +72,7 @@ export const Game = () => {
         if(targets.length > 5){
             return;
         }
-        setTargets(prev => [...prev, generateTarget(50, 50, prev)]);
+        setTargets(prev => [...prev, generateTarget(64, 46, prev)]);
     }, [targets.length]);
 
     useEffect(() => {
@@ -108,7 +109,9 @@ export const Game = () => {
                                 height={item.height} 
                                 x={xPos + item.xPos} 
                                 y={yPos + item.yPos}
-                                color="blue"
+                                color="transparent"
+                                backgroundImage={targetImage}
+                                mirror={item.mirow}
                             />)}
             {missileFired && <Missile
                             x={weponXPosition}

@@ -10,16 +10,16 @@ const SpriteStyled = styled.ImageBackground`
     height: ${props => props.height}px;
     top: 0px;
     left: 0px;
-    transform: translate(${props => props.x}px, ${props => props.y}px);
+    transform: translate(${props => props.x}px, ${props => props.y}px) ;
     /* background-image: url(${'./background.jpg'}); */
     background-size: cover;
     background-repeat: no-repeat;
     background-color: ${props => props.color || "red"};
-
+    
 `
 
-export const Sprite = ({width, height, x, y, backgroundImage, color}) => {
+export const Sprite = ({width, height, x, y, backgroundImage, color, mirror = false}) => {
  
-    return <SpriteStyled source={backgroundImage} x={x} y={y} width={width} height={height} color={color}>
+    return <SpriteStyled source={backgroundImage} x={x} y={y} width={width} height={height} color={color} mirror={mirror}>
         </SpriteStyled>
 } 

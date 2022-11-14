@@ -1,16 +1,20 @@
 import { options } from "./options";
 
 export const generateTarget = (width, height, targets = []) => {
+    const maxField = 500;
+    const minField = 300;
+
     const generationLeftOffset = 200;
     const generetionRightOffset = options.gameFieldWidth - generationLeftOffset;
     
     const xPos = getRndInteger(generationLeftOffset, generetionRightOffset);
-    const yPos = getRndInteger(300, 500);
+    const yPos = getRndInteger(minField, maxField);
     const result = {
         xPos, 
         yPos,
-        width, 
-        height,
+        width: Math.round(width / (options.viewportHeight - yPos) * 200), 
+        height: Math.round(height / (options.viewportHeight - yPos) * 200), 
+        mirow: getRndInteger(0, 1)
     }
     if(targets.some(item => {
         item.x = item.xPos;
@@ -57,3 +61,5 @@ export function getIntersection (aBlock, bBlock){
     }
     return true;
 }
+
+
