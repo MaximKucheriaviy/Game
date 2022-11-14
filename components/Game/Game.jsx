@@ -60,8 +60,8 @@ export const Game = () => {
             if(result >= 0){
                 return 0;
             }
-            if(Math.abs(result) + 300 > 3000){
-                return -2700;
+            if(Math.abs(result) + options.viewportWidth > options.gameFieldWidth){
+                return (options.gameFieldWidth - options.viewportWidth) * -1;
             }
             return result;
         });
