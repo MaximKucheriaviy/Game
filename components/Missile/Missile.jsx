@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback} from "react";
 import { options } from "../../service/options";
 import { getIntersection } from "../../service/generateTargets";
 
-export const Missile = ({x, y, remove, xPos, startPos, targets, setTargets}) => {
+export const Missile = ({x, y, remove, xPos, startPos, targets, setTargets, setScore}) => {
     const width = 20;
     const height = 20;
     const color = "yellow";
@@ -32,6 +32,7 @@ export const Missile = ({x, y, remove, xPos, startPos, targets, setTargets}) => 
                 setTargets(prev => {
                     return prev.filter((item, index) => index !== i);
                 })
+                setScore(prev => prev + 1);
                 remove();
             }
         }

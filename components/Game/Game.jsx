@@ -7,6 +7,7 @@ import EventEmitter from "react-native-eventemitter";
 import { Sprite } from "../Sprite/Sprite";
 import { Missile } from "../Missile/Missile";
 import { ControlBox } from "../ControllBox/ControlBox";
+import { Scoreboard } from "../Scoreboard/Scoreboard";
 
 import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
@@ -33,6 +34,8 @@ export const Game = () => {
     const [missileFired, setMissileFired] = useState(false);
     const [missileStartPosition, setMissileStartPosition] = useState(0);
     const {height, width} = useWindowDimensions();
+    const [score, setScore] = useState(0);
+    const [gameDifficulty, setGameDifficulty] = useState(1);
     options.viewportWidth = width;
 
     const weponWidth = 20;
@@ -101,10 +104,19 @@ export const Game = () => {
             clearInterval(TDIntervalID);
         }
     },[])
+
+    useEffect(() => {
+        setGameDifficulty(prev => {
+            const result = Math.floor(score / 10);
+            console.log(result);
+            return result;
+        })
+    },[score])
     
     return <>
         <GameStyled width={options.viewportWidth} height={options.viewportHeight}>
             <Sprite width={options.gameFieldWidth} height={options.viewportHeight} x={xPos} y={yPos} backgroundImage={backGround}/>
+            <Scoreboard Score={score}/>
             <Sprite width={weponWidth} height={weponHeight} x={weponXPosition} y={weponYPosition}/>
             {targets.map((item, index) => <Sprite 
                                 key={index}
@@ -124,6 +136,7 @@ export const Game = () => {
                             remove={() => {setMissileFired(false)}}
                             targets={targets}
                             setTargets={setTargets}
+                            setScore={setScore}
                         />}
         </GameStyled>      
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onRelease={onRelise}/>  
