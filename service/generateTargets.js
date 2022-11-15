@@ -62,4 +62,15 @@ export function getIntersection (aBlock, bBlock){
     return true;
 }
 
+export function contains ({height, width, x, y}, xPos, yPos){
+    console.log(height, width, x, y, xPos, yPos);
+    if(xPos < x || xPos >= x + width){
+        return false;
+    }
+    else if(yPos < y || yPos >= y + height){
+        return false;
+    }
+    return true;
+}
+
 

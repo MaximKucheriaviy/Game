@@ -6,11 +6,12 @@ import EventEmitter from "react-native-eventemitter";
 
 import { Sprite } from "../Sprite/Sprite";
 import { Missile } from "../Missile/Missile";
+import { ControlBox } from "../ControllBox/ControlBox";
 
 import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
 
-import { GameStyled, ControlBox, ControlButton } from "./Game.styled";
+import { GameStyled } from "./Game.styled";
 
 import backGround from "../../images/background.jpg"
 import targetImage from "../../assets/Vector.png"
@@ -41,9 +42,11 @@ export const Game = () => {
 
     const onLeft = () => {
         setSpriteMoveSpeed(options.rotationSpeed);
+        return true;
     }
     const onRight = () => {
         setSpriteMoveSpeed(options.rotationSpeed * -1);
+        return true;
     }
     const onRelise = () => {
         setSpriteMoveSpeed(0);
@@ -122,19 +125,8 @@ export const Game = () => {
                             targets={targets}
                             setTargets={setTargets}
                         />}
-        </GameStyled>
-        <ControlBox>
-            <ControlButton onPressIn={onLeft} onPressOut={onRelise}>
-                <Text>Left</Text>
-            </ControlButton>
-            <ControlButton onPressIn={onFire}>
-                <Text>FIRE</Text>
-            </ControlButton>
-            <ControlButton onPressIn={onRight} onPressOut={onRelise}>
-                <Text>Right</Text>
-            </ControlButton>
-        </ControlBox>
-        
+        </GameStyled>      
+        <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onRelease={onRelise}/>  
     </>
 }
 

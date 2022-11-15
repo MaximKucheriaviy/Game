@@ -10,13 +10,4 @@ export const GameStyled = styled.View`
     overflow: hidden;
 `
 
-export const ControlBox = styled.View`
-    width: 300px;
-    flex-direction: row;
-    justify-content: space-between;
-`
-export const ControlButton = styled.TouchableOpacity`
-    background-color: gray;
-    padding: 20px;
-    display: flex;
-`
+
