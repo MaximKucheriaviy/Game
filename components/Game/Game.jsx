@@ -42,17 +42,15 @@ const viewportMove = (entities = [], {events}) => {
         }
     })
     entities.map(item => {
+        item.x += item.moveSpeedX;
         if(item.type === "3000Back"){
             if(item.x > 0){
                 item.x = 0;
-                return item;
             }
             else if(options.gameFieldWidth < item.x * -1 + options.viewportWidth){
                 item.x = (options.gameFieldWidth - options.viewportWidth) * -1;
-                return item;
             }
         }
-        item.x += item.moveSpeedX;
         return item;
     })
     return entities
