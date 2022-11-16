@@ -6,7 +6,6 @@ export const pigGenerator = (entities, {events = []}) => {
         if(targets.length > 2){
             return entities;
         }
-        console.log("generatePig");
         const newTarget = generateTarget(68, 50, targets);
         entities.push(newTarget);
     }

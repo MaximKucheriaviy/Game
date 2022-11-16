@@ -2,7 +2,7 @@ import { options } from "./options";
 import { Sprite } from "../components/Sprite/Sprite";
 import targetImage from "../assets/Vector.png"
 
-export const generateTarget = (width, height, targets = []) => {
+export const generateTarget = (width, height) => {
     const minField = 300;
     const maxField = 500;
 
@@ -24,11 +24,6 @@ export const generateTarget = (width, height, targets = []) => {
         moveSpeedX: 0,
         backgroundImage: targetImage,
         renderer: <Sprite/>
-    }
-    if(targets.some(item => {
-        return getIntersection(result, item);
-    })){
-        return generateTarget(width, height, targets);
     }
     return result;
 }
@@ -67,7 +62,6 @@ export function getIntersection (aBlock, bBlock){
 }
 
 export function contains ({height, width, x, y}, xPos, yPos){
-    console.log(height, width, x, y, xPos, yPos);
     if(xPos < x || xPos >= x + width){
         return false;
     }

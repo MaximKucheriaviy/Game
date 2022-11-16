@@ -11,6 +11,7 @@ import { genereateStartEntitis } from "../../service/genereateStartEntitis";
 import { viewportMove } from "../../systems/viewportMove";
 import { weaponMove } from "../../systems/weaponMove";
 import { pigGenerator } from "../../systems/pigGenerator";
+import { missyleLifecycle } from "../../systems/missyleLifecycle";
 
 
 
@@ -24,6 +25,7 @@ const style = StyleSheet.create({
         backgroundColor: "blue",
         flex: null,
         position: "relative",
+        // overflow: "hidden",
     }
 })
 
@@ -48,7 +50,7 @@ export const Game = () => {
         engine.current.dispatch({type: "releaseRight"})
     }
     const onFire = () => {
-        
+        engine.current.dispatch({type: "fire"})
     }
 
     useEffect(() => {
@@ -66,7 +68,7 @@ export const Game = () => {
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
             entities={genereateStartEntitis()}
-            systems={[viewportMove, weaponMove, pigGenerator]}
+            systems={[viewportMove, pigGenerator, missyleLifecycle, weaponMove]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>
