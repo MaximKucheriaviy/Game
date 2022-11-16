@@ -2,7 +2,7 @@ import { ControlButton, ControlBoxStyled } from "./ControlBoxStyled"
 import { useState } from "react";
 import { Text } from "react-native";
 import { contains } from "../../service/generateTargets";
-export const ControlBox = ({onLeft, onRight, onFire, onRelease}) => {
+export const ControlBox = ({onLeft, onRight, onFire, onReliseLeft, onReliseRight}) => {
     const [fireLayout, setFireLayout] = useState({});
     const [rightLayout, setRightLayout] = useState({});
 
@@ -37,7 +37,7 @@ export const ControlBox = ({onLeft, onRight, onFire, onRelease}) => {
     return <ControlBoxStyled onStartShouldSetResponder={e => true}>
         <ControlButton onStartShouldSetResponder={onLeftClick} 
                         onResponderTerminationRequest={terminationLeft}
-                        onResponderRelease={onRelease}
+                        onResponderRelease={onReliseLeft}
                         >
             <Text>Left</Text>
         </ControlButton>
@@ -48,7 +48,7 @@ export const ControlBox = ({onLeft, onRight, onFire, onRelease}) => {
         </ControlButton>
         <ControlButton  onStartShouldSetResponder={onRightClick} 
                         onResponderTerminationRequest={terminationRight}
-                        onResponderRelease={onRelease}
+                        onResponderRelease={onReliseRight}
                         onLayout = {event => setRightLayout(event.nativeEvent.layout)}
                         >
             <Text>Right</Text>

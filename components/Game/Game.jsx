@@ -1,145 +1,105 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { GameEngine } from "react-native-game-engine";
 
-import {Text, useWindowDimensions} from "react-native";
-import EStyleSheet from "react-native-extended-stylesheet";
-import EventEmitter from "react-native-eventemitter";
+import {Text, useWindowDimensions, StyleSheet} from "react-native";
 
 import { Sprite } from "../Sprite/Sprite";
-import { Missile } from "../Missile/Missile";
 import { ControlBox } from "../ControllBox/ControlBox";
-import { Scoreboard } from "../Scoreboard/Scoreboard";
 
 import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
 
-import { GameStyled } from "./Game.styled";
 
 import backGround from "../../images/background.jpg"
 import targetImage from "../../assets/Vector.png"
 
-const style = EStyleSheet.create({
+const style = StyleSheet.create({
     button: {
         paddingLeft: 20
+    },
+    Game: {
+        height: options.viewportHeight,
+        backgroundColor: "blue",
+        flex: null,
+        position: "relative",
     }
 })
 
-
+const viewportMove = (entities = [], {events}) => {
+    
+    events.forEach(item => {
+        if(item.type === "leftMove" || item.type === "releaseRight"){
+            entities.map(item => {
+                item.moveSpeedX += options.rotationSpeed;
+                return item;
+            })
+        }
+        else if(item.type === "releaseLeft" || item.type === "rightMove"){
+            entities.map(item => {
+                item.moveSpeedX -= options.rotationSpeed;
+                return item;
+            })
+        }
+    })
+    entities.map(item => {
+        if(item.type === "3000Back"){
+            if(item.x > 0){
+                item.x = 0;
+                return item;
+            }
+            else if(options.gameFieldWidth < item.x * -1 + options.viewportWidth){
+                item.x = (options.gameFieldWidth - options.viewportWidth) * -1;
+                return item;
+            }
+        }
+        item.x += item.moveSpeedX;
+        return item;
+    })
+    return entities
+}
 
 export const Game = () => {
-    const isStarted = useRef(false);
-    const [spriteMoveSpeed, setSpriteMoveSpeed] = useState(0);
-    const [yPos] = useState(0);
-    const [xPos, setXPos] = useState(-1500);
-    const [targets, setTargets] = useState([]);
-    const [missileFired, setMissileFired] = useState(false);
-    const [missileStartPosition, setMissileStartPosition] = useState(0);
-    const {height, width} = useWindowDimensions();
-    const [score, setScore] = useState(0);
-    const [gameDifficulty, setGameDifficulty] = useState(1);
+    const {width, height} = useWindowDimensions();
     options.viewportWidth = width;
-
-    const weponWidth = 20;
-    const weponHeight = 20;
-    const weponXPosition = options.viewportWidth / 2 - weponWidth / 2;
-    const weponYPosition = 30;
-
+    const engine = useRef(null);
     const onLeft = () => {
-        setSpriteMoveSpeed(options.rotationSpeed);
+        engine.current.dispatch({type: "leftMove"})
         return true;
     }
     const onRight = () => {
-        setSpriteMoveSpeed(options.rotationSpeed * -1);
+        engine.current.dispatch({type: "rightMove"})
         return true;
     }
-    const onRelise = () => {
-        setSpriteMoveSpeed(0);
+    const onReliseLeft = () => {
+        engine.current.dispatch({type: "releaseLeft"})
+    }
+    const onReliseRight = () => {
+        engine.current.dispatch({type: "releaseRight"})
     }
     const onFire = () => {
-        if(!missileFired){
-            setMissileStartPosition(xPos)
-            setMissileFired(true);
-        }
+        
     }
-
-    const tickHendler = useCallback(() => {
-        setXPos(prev => {
-            const result = prev + spriteMoveSpeed;
-            if(result >= 0){
-                return 0;
+    return <>    
+        <GameEngine
+            ref={(ref) => engine.current = ref}
+            style={[style.Game, {width: width}]}
+            entities={
+                [
+                    {
+                        type: "3000Back",
+                        x: -1500, 
+                        y: 0, 
+                        width: options.gameFieldWidth, 
+                        moveSpeedX: 0,
+                        height: options.viewportHeight, 
+                        backgroundImage: backGround,
+                        renderer: <Sprite/>
+                    }
+                ]
             }
-            if(Math.abs(result) + options.viewportWidth > options.gameFieldWidth){
-                return (options.gameFieldWidth - options.viewportWidth) * -1;
-            }
-            return result;
-        });
-    }, [spriteMoveSpeed]);
-
-    const targetGenerationHendler = useCallback(() => {
-        if(targets.length > 5){
-            return;
-        }
-        setTargets(prev => [...prev, generateTarget(64, 46, prev)]);
-    }, [targets.length]);
-
-    useEffect(() => {
-        EventEmitter.on('tick', tickHendler);
-        EventEmitter.on('tergetGeneration', targetGenerationHendler);
-        return () => {
-            EventEmitter.removeListener('tick',tickHendler)
-            EventEmitter.removeListener('tergetGeneration', targetGenerationHendler);
-        }
-
-    }, [tickHendler, targetGenerationHendler])
-
-    useEffect(() => {
-        isStarted.current = false;
-        const tickIntervalId = setInterval(() => {
-            EventEmitter.emit('tick');
-        }, 16);
-        const TDIntervalID = setInterval(() => {
-            EventEmitter.emit('tergetGeneration');
-        }, 1000);
-        return () => {
-            clearInterval(tickIntervalId);
-            clearInterval(TDIntervalID);
-        }
-    },[])
-
-    useEffect(() => {
-        setGameDifficulty(prev => {
-            const result = Math.floor(score / 10);
-            console.log(result);
-            return result;
-        })
-    },[score])
-    
-    return <>
-        <GameStyled width={options.viewportWidth} height={options.viewportHeight}>
-            <Sprite width={options.gameFieldWidth} height={options.viewportHeight} x={xPos} y={yPos} backgroundImage={backGround}/>
-            <Scoreboard Score={score}/>
-            <Sprite width={weponWidth} height={weponHeight} x={weponXPosition} y={weponYPosition}/>
-            {targets.map((item, index) => <Sprite 
-                                key={index}
-                                width={item.width} 
-                                height={item.height} 
-                                x={xPos + item.xPos} 
-                                y={yPos + item.yPos}
-                                color="transparent"
-                                backgroundImage={targetImage}
-                                mirror={item.mirow}
-                            />)}
-            {missileFired && <Missile
-                            x={weponXPosition}
-                            y={weponYPosition}
-                            xPos={xPos}
-                            startPos={missileStartPosition}
-                            remove={() => {setMissileFired(false)}}
-                            targets={targets}
-                            setTargets={setTargets}
-                            setScore={setScore}
-                        />}
-        </GameStyled>      
-        <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onRelease={onRelise}/>  
+            systems={[viewportMove]}
+        /> 
+        <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>
 }
 
