@@ -5,7 +5,7 @@ export const viewportMove = (entities = [], {events}) => {
     events.forEach(item => {
         if(item.type === "leftMove" || item.type === "releaseRight"){
             entities.map(item => {
-                if(item.type === "weapon") {
+                if(item.type !== "3000Back") {
                     return item;
                 }
                 item.moveSpeedX += options.rotationSpeed;
@@ -14,7 +14,7 @@ export const viewportMove = (entities = [], {events}) => {
         }
         else if(item.type === "releaseLeft" || item.type === "rightMove"){
             entities.map(item => {
-                if(item.type === "weapon") {
+                if(item.type !== "3000Back") {
                     return item;
                 }
                 item.moveSpeedX -= options.rotationSpeed;
@@ -23,7 +23,7 @@ export const viewportMove = (entities = [], {events}) => {
         }
     })
     entities.map(item => {
-        if(item.type === "weapon"){
+        if(item.type !== "3000Back"){
             return item;
         }
         item.x += item.moveSpeedX;
@@ -35,6 +35,14 @@ export const viewportMove = (entities = [], {events}) => {
                 item.x = (options.gameFieldWidth - options.viewportWidth) * -1;
             }
         }
+        return item;
+    })
+    const background = entities.find(item => item.type === "3000Back") ;
+    entities.map(item => {
+        if(item.type === "weapon" || item.type === "3000Back"){
+            return item;
+        }
+        item.x = background.x + item.relX;
         return item;
     })
     return entities

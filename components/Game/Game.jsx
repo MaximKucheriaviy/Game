@@ -6,15 +6,14 @@ import {Text, useWindowDimensions, StyleSheet} from "react-native";
 import { Sprite } from "../Sprite/Sprite";
 import { ControlBox } from "../ControllBox/ControlBox";
 
-import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
 import { genereateStartEntitis } from "../../service/genereateStartEntitis";
 import { viewportMove } from "../../systems/viewportMove";
 import { weaponMove } from "../../systems/weaponMove";
+import { pigGenerator } from "../../systems/pigGenerator";
 
 
 
-import targetImage from "../../assets/Vector.png"
 
 const style = StyleSheet.create({
     button: {
@@ -51,12 +50,23 @@ export const Game = () => {
     const onFire = () => {
         
     }
+
+    useEffect(() => {
+        const id = setInterval(() => {
+            engine.current.dispatch({type: "generatePigs"})
+        }, 1000)
+        return () => {
+            clearInterval(id);
+        }
+    }, [])
+
+
     return <>    
         <GameEngine
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
             entities={genereateStartEntitis()}
-            systems={[viewportMove, weaponMove]}
+            systems={[viewportMove, weaponMove, pigGenerator]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>

@@ -1,27 +1,31 @@
 import { options } from "./options";
+import { Sprite } from "../components/Sprite/Sprite";
+import targetImage from "../assets/Vector.png"
 
 export const generateTarget = (width, height, targets = []) => {
-    const maxField = 500;
     const minField = 300;
+    const maxField = 500;
 
     const generationLeftOffset = 200;
     const generetionRightOffset = options.gameFieldWidth - generationLeftOffset;
     
-    const xPos = getRndInteger(generationLeftOffset, generetionRightOffset);
-    const yPos = getRndInteger(minField, maxField);
+    const x = getRndInteger(generationLeftOffset, generetionRightOffset);
+    const y = getRndInteger(minField, maxField);
     const result = {
-        xPos, 
-        yPos,
-        width: Math.round(width / (options.viewportHeight - yPos) * 200), 
-        height: Math.round(height / (options.viewportHeight - yPos) * 200), 
-        mirow: getRndInteger(0, 1)
+        x, 
+        y,
+        relX: x,
+        relY: y,
+        type: "pig",
+        color: "transparent",
+        width: Math.round(width / (options.viewportHeight - y) * 200), 
+        height: Math.round(height / (options.viewportHeight - y) * 200), 
+        mirow: getRndInteger(0, 1),
+        moveSpeedX: 0,
+        backgroundImage: targetImage,
+        renderer: <Sprite/>
     }
     if(targets.some(item => {
-        item.x = item.xPos;
-        item.y = item.yPos;
-
-        result.x = result.xPos
-        result.y = result.yPos
         return getIntersection(result, item);
     })){
         return generateTarget(width, height, targets);
