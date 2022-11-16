@@ -8,9 +8,12 @@ import { ControlBox } from "../ControllBox/ControlBox";
 
 import { generateTarget } from "../../service/generateTargets";
 import { options } from "../../service/options";
+import { genereateStartEntitis } from "../../service/genereateStartEntitis";
+import { viewportMove } from "../../systems/viewportMove";
+import { weaponMove } from "../../systems/weaponMove";
 
 
-import backGround from "../../images/background.jpg"
+
 import targetImage from "../../assets/Vector.png"
 
 const style = StyleSheet.create({
@@ -25,36 +28,7 @@ const style = StyleSheet.create({
     }
 })
 
-const viewportMove = (entities = [], {events}) => {
-    
-    events.forEach(item => {
-        if(item.type === "leftMove" || item.type === "releaseRight"){
-            entities.map(item => {
-                item.moveSpeedX += options.rotationSpeed;
-                return item;
-            })
-        }
-        else if(item.type === "releaseLeft" || item.type === "rightMove"){
-            entities.map(item => {
-                item.moveSpeedX -= options.rotationSpeed;
-                return item;
-            })
-        }
-    })
-    entities.map(item => {
-        item.x += item.moveSpeedX;
-        if(item.type === "3000Back"){
-            if(item.x > 0){
-                item.x = 0;
-            }
-            else if(options.gameFieldWidth < item.x * -1 + options.viewportWidth){
-                item.x = (options.gameFieldWidth - options.viewportWidth) * -1;
-            }
-        }
-        return item;
-    })
-    return entities
-}
+
 
 export const Game = () => {
     const {width, height} = useWindowDimensions();
@@ -81,21 +55,8 @@ export const Game = () => {
         <GameEngine
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
-            entities={
-                [
-                    {
-                        type: "3000Back",
-                        x: -1500, 
-                        y: 0, 
-                        width: options.gameFieldWidth, 
-                        moveSpeedX: 0,
-                        height: options.viewportHeight, 
-                        backgroundImage: backGround,
-                        renderer: <Sprite/>
-                    }
-                ]
-            }
-            systems={[viewportMove]}
+            entities={genereateStartEntitis()}
+            systems={[viewportMove, weaponMove]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>
