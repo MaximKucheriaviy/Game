@@ -8,9 +8,8 @@ const SpriteStyled = styled.ImageBackground`
     position: absolute;
     width: ${props => props.width}px;
     height: ${props => props.height}px;
-    top: 0px;
-    left: 0px;
-    transform: translate(${props => props.x}px, ${props => props.y}px) ;
+    top: ${props => props.y}px;
+    left: ${props => props.x}px;
     background-image: url(${'./background.jpg'});
     background-size: cover;
     background-repeat: no-repeat;

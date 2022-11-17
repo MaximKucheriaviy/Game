@@ -1,7 +1,7 @@
 import { options } from "../service/options"
 
 
-export const viewportMove = (entities = [], {events}) => {
+export const viewportMove = (entities = [], {events, time}) => {
     const backgroundIndex = entities.findIndex(item => item.type === "3000Back") ;
     events.forEach(item => {
         if(item.type === "leftMove" || item.type === "releaseRight"){
@@ -12,7 +12,7 @@ export const viewportMove = (entities = [], {events}) => {
         }
     })
 
-    entities[backgroundIndex].x += entities[backgroundIndex].moveSpeedX;
+    entities[backgroundIndex].x += entities[backgroundIndex].moveSpeedX * time.delta / 16;
     if(entities[backgroundIndex].x > 0){
         entities[backgroundIndex].x = 0;
     }

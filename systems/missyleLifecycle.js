@@ -2,7 +2,8 @@ import { Sprite } from "../components/Sprite/Sprite"
 import { options } from "../service/options";
 import { getIntersection } from "../service/generateTargets";
 
-export const missyleLifecycle = (entities = [], {events}) => {
+export const missyleLifecycle = (entities = [], {events, time}) => {
+    const setup = entities.findIndex(item => item.type === "setup");
     const missile = entities.findIndex(item => item.type === "missile");
     if(events.some(item => item.type === "fire")){
         if(missile === -1){
@@ -14,7 +15,7 @@ export const missyleLifecycle = (entities = [], {events}) => {
 
 
     if(missile !== -1){
-        entities[missile].y += entities[missile].moveSpeedY;
+        entities[missile].y += entities[missile].moveSpeedY * time.delta / 16;
         const intersection = entities.findIndex(item => {
             if(item.type !== "pig"){
                 return false;
@@ -30,6 +31,7 @@ export const missyleLifecycle = (entities = [], {events}) => {
         if(intersection >= 0){
             entities.splice(missile, 1);
             entities.splice(intersection, 1);
+            entities[setup].score += 1;
         }
     }
 

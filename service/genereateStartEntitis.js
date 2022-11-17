@@ -24,5 +24,11 @@ export const genereateStartEntitis = () => {
             moveSide: true,
             renderer: <Sprite/>
         },
+        {
+            type: "setup",
+            score: 0,
+            pigSpeed: 0,
+            level: 0,
+        }
     ]
 }

@@ -12,6 +12,8 @@ import { viewportMove } from "../../systems/viewportMove";
 import { weaponMove } from "../../systems/weaponMove";
 import { pigGenerator } from "../../systems/pigGenerator";
 import { missyleLifecycle } from "../../systems/missyleLifecycle";
+import { pigMoves } from "../../systems/pigMoves";
+import { gameStatus } from "../../systems/gameStatus";
 
 
 
@@ -68,7 +70,7 @@ export const Game = () => {
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
             entities={genereateStartEntitis()}
-            systems={[viewportMove, pigGenerator, missyleLifecycle, weaponMove]}
+            systems={[viewportMove, pigGenerator, missyleLifecycle, pigMoves, gameStatus]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>

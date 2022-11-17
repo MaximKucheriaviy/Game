@@ -12,10 +12,13 @@ export const generateTarget = (width, height) => {
     const x = getRndInteger(generationLeftOffset, generetionRightOffset);
     const y = getRndInteger(minField, maxField);
     const result = {
-        x, 
-        y,
+        x: options.gameFieldWidth * -1 + x, 
+        y, y, 
         relX: x,
         relY: y,
+        moveMin: x - getRndInteger(100, 300),
+        moveMax: x + getRndInteger(100, 300),
+        moveTurn: getRndInteger(0, 1),
         type: "pig",
         color: "transparent",
         width: Math.round(width / (options.viewportHeight - y) * 200), 

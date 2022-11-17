@@ -1,6 +1,6 @@
 export const options = {
     viewportHeight: 600,
     viewportWidth: 300,
-    gameFieldWidth: 3000,
+    gameFieldWidth: 2000,
     rotationSpeed: 7,
 }
