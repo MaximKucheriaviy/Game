@@ -70,7 +70,7 @@ export const Game = () => {
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
             entities={genereateStartEntitis()}
-            systems={[viewportMove, pigGenerator, missyleLifecycle, pigMoves, gameStatus]}
+            systems={[viewportMove]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>

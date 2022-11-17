@@ -26,7 +26,7 @@ const SpriteStyled = styled.ImageBackground`
 
 export const Sprite = ({width, height, x, y, backgroundImage, color, moveTurn, type}) => {
     return <>
-        {((x > -50 && x < options.viewportWidth + 50)) && 
+        {((x > -50 && x < options.viewportWidth + 50) || type !== "back3000") && 
         <SpriteStyled 
         source={backgroundImage} 
         x={x} 
