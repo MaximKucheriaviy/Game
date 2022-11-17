@@ -20,10 +20,9 @@ export const generateTarget = (width, height) => {
         moveMax: x + getRndInteger(100, 300),
         moveTurn: getRndInteger(0, 1),
         type: "pig",
-        color: "transparent",
+        color: "green",
         width: Math.round(width / (options.viewportHeight - y) * 200), 
         height: Math.round(height / (options.viewportHeight - y) * 200), 
-        mirow: getRndInteger(0, 1),
         moveSpeedX: 0,
         backgroundImage: targetImage,
         renderer: <Sprite/>
