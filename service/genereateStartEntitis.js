@@ -1,34 +1,18 @@
 import { Sprite } from "../components/Sprite/Sprite"
 import { options } from "./options"
 import backGround from "../images/background.jpg"
-export const genereateStartEntitis = () => {
-    return [
-        {
-            type: "3000Back",
-            x: -1500, 
-            y: 0, 
-            width: options.gameFieldWidth, 
-            moveSpeedX: 0,
-            height: options.viewportHeight, 
-            backgroundImage: backGround,
-            renderer: <Sprite/>
-        },
-        {
-            type: "weapon",
-            x: options.viewportWidth / 2 - 15, 
-            y: 10, 
-            width: 30, 
-            height: 30, 
-            moveSpeedX: 3,
-            color: "red",
-            moveSide: true,
-            renderer: <Sprite/>
-        },
-        {
-            type: "setup",
-            score: 0,
-            pigSpeed: 0,
-            level: 0,
-        }
-    ]
+import Matter from "matter-js";
+
+export const setupWorld = () => {
+    const engine = Matter.Engine.create({enableSleeping: false});
+    const world = engine.world;
+
+    const backgound3000 = Matter.Bodies.rectangle(-1500, 0, options.gameFieldWidth, options.viewportHeight, {isStatic: true});
+
+    Matter.World.add(world, [backgound3000]);
+    return {
+        phisics: {engine, world},
+        backgound3000: {body: backgound3000, backgroundImage: backGround, width: 3000, height: options.viewportHeight, color: "red", renderer: <Sprite/>},
+        setup: {viewportMoveSpeed: 0}
+    }
 }

@@ -5,15 +5,11 @@ import {Text, useWindowDimensions, StyleSheet} from "react-native";
 
 import { Sprite } from "../Sprite/Sprite";
 import { ControlBox } from "../ControllBox/ControlBox";
-
 import { options } from "../../service/options";
-import { genereateStartEntitis } from "../../service/genereateStartEntitis";
-import { viewportMove } from "../../systems/viewportMove";
-import { weaponMove } from "../../systems/weaponMove";
-import { pigGenerator } from "../../systems/pigGenerator";
-import { missyleLifecycle } from "../../systems/missyleLifecycle";
-import { pigMoves } from "../../systems/pigMoves";
-import { gameStatus } from "../../systems/gameStatus";
+import { Movement } from "../../systems/movement";
+import { setupWorld } from "../../service/genereateStartEntitis";
+
+
 
 
 
@@ -65,12 +61,14 @@ export const Game = () => {
     }, [])
 
 
+   
+
     return <>    
         <GameEngine
             ref={(ref) => engine.current = ref}
             style={[style.Game, {width: width}]}
-            entities={genereateStartEntitis()}
-            systems={[viewportMove, pigGenerator, missyleLifecycle, pigMoves, gameStatus]}
+            entities={setupWorld()}
+            systems={[Movement]}
         /> 
         <ControlBox onLeft={onLeft} onRight={onRight} onFire={onFire} onReliseLeft={onReliseLeft} onReliseRight={onReliseRight}/>  
     </>
